@@ -1,0 +1,39 @@
+---
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Astro</title>
+    </head>
+    <body>
+        <h1>Astro</h1>
+            <canvas id="weather-chart"></canvas>
+        <script>
+            import Chart from 'chart.js/auto';
+            const res = await fetch("https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=60.19&lon=24.95")
+            const data = await res.json()
+            const forecast = data.properties.timeseries
+            console.log(forecast)
+
+            new Chart(
+                document.getElementById('weather-chart'),
+                {
+                type: 'line',
+                data: {
+                    labels: forecast.map(row => row.time),
+                    datasets: [
+                    {
+                        label: 'Forecast',
+                        data: forecast.map(row => row.data.instant.details.air_temperature)
+                    }
+                    ]
+                }
+                }
+            );
+        </script>
+    </body>
+</html>
